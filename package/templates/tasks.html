@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}
+    To-Do List
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>My To-Do List</h1>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTaskModal">
+            <i class="fas fa-plus"></i> Add New Task
+        </button>
+    </div>
+
+    {% if tasks %}
+        <div class="row">
+            {% for task in tasks %} 
+                <div class="col-md-6 col-lg-4 mb-3">
+                    <div class="card h-100 {% if task.completed %}bg-light border-success{% endif %}">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title {% if task.completed %}text-decoration-line-through text-muted{% endif %}">
+                                    {{ task.title }}
+                                </h5>
+                                <div class="form-check">
+                                    <input class="form-check-input task-checkbox" type="checkbox" 
+                                           data-task-id="{{ task.id }}" {% if task.completed %}checked{% endif %}>
+                                </div>
+                            </div>
+                            
+                            {% if task.description %}
+                                <p class="card-text {% if task.completed %}text-muted{% endif %}">
+                                    {{ task.description[:100] }}{% if task.description|length > 100 %}...{% endif %}
+                                </p>
+                            {% endif %}
+                            
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar"></i> Due: {{ task.date.strftime('%Y-%m-%d %H:%M') }}
+                                </small>
+                            </p>
+                            
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-primary" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#updateTaskModal{{ task.id }}">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#deleteTaskModal{{ task.id }}">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+            <h3 class="text-muted">No tasks yet</h3>
+            <p class="text-muted">Click "Add New Task" to get started!</p>
+        </div>
+    {% endif %}
+</div>
+
+{% include "includes/add_task.html" %}
+{% include "includes/update_task.html" %}
+{% include "includes/delete_task.html" %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle task completion toggle
+    document.querySelectorAll('.task-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const taskId = this.dataset.taskId;
+            const completed = this.checked;
+            
+            fetch(`/toggle_task/${taskId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name=csrf-token]').getAttribute('content')
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    throw new Error(data.error || 'Unknown error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to update task: ' + error.message);
+                this.checked = !completed;
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

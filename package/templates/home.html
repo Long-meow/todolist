@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}
+  Home page 
+{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+  <div class="p-5 mb-4 bg-light rounded-3 shadow-sm">
+    <h1 class="display-4">Welcome to Your Todo List App!</h1>
+    <p class="lead mt-3">Organize your tasks, stay productive, and never forget anything again.</p>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-4">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Easy Organization</h5>
+          <p class="card-text">Keep all your tasks in one place and manage them efficiently.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Stay Productive</h5>
+          <p class="card-text">Focus on what matters most and mark completed tasks with ease.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Track Progress</h5>
+          <p class="card-text">Visualize your progress and never miss deadlines again.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

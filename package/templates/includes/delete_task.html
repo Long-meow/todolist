@@ -1,0 +1,45 @@
+
+{% for task in tasks %}
+<div class="modal fade" id="deleteTaskModal{{ task.id }}" tabindex="-1" aria-labelledby="deleteTaskLabel{{ task.id }}" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-danger" id="deleteTaskLabel{{ task.id }}">
+          <i class="fas fa-exclamation-triangle"></i> Delete Task
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <div class="modal-body">
+        <p>Are you sure you want to delete this task?</p>
+        
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{ task.title }}</h5>
+            {% if task.description %}
+              <p class="card-text">{{ task.description[:100] }}{% if task.description|length > 100 %}...{% endif %}</p>
+            {% endif %}
+            <p class="card-text">
+              <small class="text-muted">
+                <i class="fas fa-calendar"></i> Due: {{ task.date.strftime('%Y-%m-%d %H:%M') }}
+              </small>
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <form method="POST" action="{{ url_for('delete_task', task_id=task.id) }}" style="display: inline;">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+          <button type="submit" class="btn btn-danger">
+            <i class="fas fa-trash"></i> Delete Task
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endfor %}

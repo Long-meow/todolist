@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}
+  Login page
+{% endblock %}
+
+{% block content %}
+  <form method="post" class="form-group text-center mt-5 mb-5 p-3 p-md-5 bg-dark text-light box-shadow d-none d-md-block" style="color:white ; border-radius: 10px 10px 10px 10px">
+    {{ login_form.hidden_tag() }}
+    <div class="form-group text-center mt-5 mb-5 p-3 p-md-5">
+      <h4> Sign In</h4>
+      {{ login_form.username(class="form-control", placeholder="Username") }} 
+      <br>
+      {{ login_form.password(class="form-control", placeholder="Password") }}
+      <br>
+      <div>
+        <a href="{{ url_for('register') }}" class="text-light"> Don't have an account?</a>
+        {{ login_form.submit(class="btn btn-primary") }}
+      </div>
+      <br>
+    </div>
+    
+  </form>
+{% endblock %}
